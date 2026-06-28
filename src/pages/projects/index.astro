@@ -15,11 +15,15 @@ interface ProjectData {
 }
 
 async function loadProjects(): Promise<ProjectData[]> {
-  // Factory-floor repo sits adjacent to this site repo under ~/repos/
-  const repoRoot = path.resolve(process.cwd(), '..', '3d-printing');
+  // CI: checked out to _factory-floor/ inside workspace. Local dev: sibling repo.
+  const candidates = [
+    path.resolve(process.cwd(), '_factory-floor'),
+    path.resolve(process.cwd(), '..', '3d-printing'),
+  ];
+  const repoRoot = candidates.find(p => existsSync(path.join(p, 'projects'))) ?? '';
   const projectsDir = path.join(repoRoot, 'projects');
 
-  if (!existsSync(projectsDir)) return [];
+  if (!repoRoot || !existsSync(projectsDir)) return [];
 
   const projects: ProjectData[] = [];
   try {

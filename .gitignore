@@ -1,4 +1,5 @@
 node_modules/
+_factory-floor/
 dist/
 .wrangler/
 .astro/
