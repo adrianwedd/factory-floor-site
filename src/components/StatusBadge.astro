@@ -1,0 +1,26 @@
+---
+interface Props {
+  status: string;
+}
+const { status } = Astro.props;
+
+const colorMap: Record<string, string> = {
+  idea:                         'bg-[var(--color-surface-raised)] text-[var(--color-text-muted)]',
+  spec_draft:                   'bg-[var(--color-amber-dim)]/20 text-[var(--color-amber)]',
+  cad_draft:                    'bg-[var(--color-amber-dim)]/20 text-[var(--color-amber)]',
+  exported:                     'bg-[var(--color-status-active)]/15 text-[var(--color-status-active)]',
+  validated:                    'bg-[var(--color-status-active)]/15 text-[var(--color-status-active)]',
+  sliced:                       'bg-[var(--color-status-active)]/15 text-[var(--color-status-active)]',
+  ready_for_human_print_review: 'bg-[var(--color-amber-glow)]/15 text-[var(--color-amber-glow)]',
+  printed:                      'bg-[var(--color-status-complete)]/15 text-[var(--color-status-complete)]',
+  archived:                     'bg-[var(--color-status-complete)]/10 text-[var(--color-text-faint)]',
+  needs_revision:               'bg-[var(--color-status-blocked)]/15 text-[var(--color-status-blocked)]',
+};
+
+const cls = colorMap[status] ?? 'bg-[var(--color-surface-raised)] text-[var(--color-text-muted)]';
+const label = status.replace(/_/g, ' ');
+---
+
+<span class:list={['inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-mono', cls]}>
+  {label}
+</span>

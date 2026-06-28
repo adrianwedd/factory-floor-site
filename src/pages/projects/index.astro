@@ -1,0 +1,73 @@
+---
+import { readdir, readFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
+import path from 'node:path';
+import yaml from 'js-yaml';
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+
+interface ProjectData {
+  name?: string;
+  status?: string;
+  material?: string;
+  printer_profile?: string;
+  notes?: string[] | string;
+}
+
+async function loadProjects(): Promise<ProjectData[]> {
+  // Factory-floor repo sits adjacent to this site repo under ~/repos/
+  const repoRoot = path.resolve(process.cwd(), '..', '3d-printing');
+  const projectsDir = path.join(repoRoot, 'projects');
+
+  if (!existsSync(projectsDir)) return [];
+
+  const projects: ProjectData[] = [];
+  try {
+    const areas = await readdir(projectsDir, { withFileTypes: true });
+    for (const area of areas) {
+      if (!area.isDirectory()) continue;
+      const areaPath = path.join(projectsDir, area.name);
+      const names = await readdir(areaPath, { withFileTypes: true });
+      for (const proj of names) {
+        if (!proj.isDirectory()) continue;
+        const yamlPath = path.join(areaPath, proj.name, 'project.yaml');
+        if (!existsSync(yamlPath)) continue;
+        const raw = await readFile(yamlPath, 'utf8');
+        const data = (yaml.load(raw) as ProjectData) ?? {};
+        projects.push(data);
+      }
+    }
+  } catch {
+    // In CI without the sibling repo, return empty
+  }
+  return projects;
+}
+
+const projects = await loadProjects();
+---
+
+<Base title="projects" description="Active and archived fabrication projects.">
+  <h1 class="font-mono text-xs uppercase tracking-widest text-[var(--color-text-faint)] mb-10">projects</h1>
+
+  {projects.length === 0 ? (
+    <p class="text-[var(--color-text-muted)] font-mono text-sm">
+      No project data available — factory-floor repo not found at build time.
+    </p>
+  ) : (
+    <div class="grid gap-4 sm:grid-cols-2">
+      {projects.map((p) => {
+        const notes = p.notes;
+        const firstNote = Array.isArray(notes) ? notes[0] : (typeof notes === 'string' ? notes : undefined);
+        return (
+          <ProjectCard
+            name={p.name ?? 'unnamed'}
+            status={p.status ?? 'unknown'}
+            material={p.material}
+            printer_profile={p.printer_profile}
+            note={firstNote}
+          />
+        );
+      })}
+    </div>
+  )}
+</Base>

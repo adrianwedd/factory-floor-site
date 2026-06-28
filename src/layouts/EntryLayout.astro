@@ -1,0 +1,33 @@
+---
+import Base from './Base.astro';
+import DispatchMeta from '../components/DispatchMeta.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  dispatch: number;
+  date: Date;
+  type: string;
+  project?: string;
+}
+const { title, description, dispatch, date, type, project } = Astro.props;
+---
+
+<Base title={title} description={description}>
+  <article class="mx-auto" style="max-width: var(--prose-measure, 68ch);">
+    <DispatchMeta dispatch={dispatch} date={date} type={type} project={project} />
+    <h1 class="font-serif text-2xl font-bold text-[var(--color-text)] mb-6 mt-0">{title}</h1>
+    <div
+      class="prose prose-invert max-w-none
+             prose-p:font-serif prose-p:text-[var(--color-text)] prose-p:leading-relaxed
+             prose-headings:font-sans prose-headings:font-semibold prose-headings:text-[var(--color-text)]
+             prose-a:text-[var(--color-copper)] prose-a:no-underline hover:prose-a:underline
+             prose-code:text-[var(--color-amber-glow)] prose-code:bg-[var(--color-surface-raised)]
+             prose-pre:bg-[#0d0b10] prose-pre:border prose-pre:border-[var(--color-border)]
+             prose-blockquote:border-l-[var(--color-copper-dim)] prose-blockquote:text-[var(--color-text-muted)]
+             prose-hr:border-[var(--color-border)]"
+    >
+      <slot />
+    </div>
+  </article>
+</Base>

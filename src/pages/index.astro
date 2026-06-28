@@ -1,0 +1,66 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import DispatchMeta from '../components/DispatchMeta.astro';
+
+const entries = (await getCollection('log'))
+  .sort((a, b) => b.data.dispatch - a.data.dispatch);
+
+const latest = entries[0];
+const recent = entries.slice(1, 5);
+---
+
+<Base title="factory floor" description="A public build journal for factory-floor — a 3D printing workflow CLI.">
+  <!-- Latest entry -->
+  {latest && (
+    <section class="mb-16">
+      <DispatchMeta
+        dispatch={latest.data.dispatch}
+        date={latest.data.date}
+        type={latest.data.type}
+        project={latest.data.project}
+      />
+      <h1 class="font-serif text-3xl font-bold text-[var(--color-text)] mb-4 mt-0">
+        <a href={`/log/${latest.slug}/`} class="no-underline hover:text-[var(--color-copper)] transition-colors">
+          {latest.data.title}
+        </a>
+      </h1>
+      {latest.data.description && (
+        <p class="text-[var(--color-text-muted)] text-lg leading-relaxed mb-6">{latest.data.description}</p>
+      )}
+      <a href={`/log/${latest.slug}/`} class="text-sm font-mono text-[var(--color-copper)] hover:text-[var(--color-copper-hover)] no-underline">
+        read →
+      </a>
+    </section>
+  )}
+
+  <!-- Recent entries -->
+  {recent.length > 0 && (
+    <section>
+      <h2 class="font-mono text-xs uppercase tracking-widest text-[var(--color-text-faint)] mb-6">recent</h2>
+      <ul class="space-y-6 list-none p-0 m-0">
+        {recent.map((entry) => (
+          <li class="border-b border-[var(--color-border)] pb-6">
+            <div class="flex items-center gap-3 mb-1 text-xs font-mono text-[var(--color-text-muted)]">
+              <time datetime={entry.data.date.toISOString()}>
+                {entry.data.date.toLocaleDateString('en-AU', { year: 'numeric', month: 'short', day: 'numeric' })}
+              </time>
+              <span>·</span>
+              <span>#{entry.data.dispatch}</span>
+              <span>·</span>
+              <span>{entry.data.type}</span>
+            </div>
+            <a href={`/log/${entry.id}/`} class="font-serif text-lg text-[var(--color-text)] no-underline hover:text-[var(--color-copper)] transition-colors">
+              {entry.data.title}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div class="mt-8">
+        <a href="/log/" class="text-sm font-mono text-[var(--color-text-muted)] hover:text-[var(--color-text)] no-underline transition-colors">
+          all dispatches →
+        </a>
+      </div>
+    </section>
+  )}
+</Base>

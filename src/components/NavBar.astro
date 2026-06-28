@@ -1,0 +1,36 @@
+---
+const navLinks = [
+  { href: '/log/', label: 'log' },
+  { href: '/projects/', label: 'projects' },
+  { href: '/about/', label: 'about' },
+];
+const current = Astro.url.pathname;
+---
+
+<nav class="border-b border-[var(--color-border)] bg-[var(--color-surface)]">
+  <div class="mx-auto max-w-4xl px-6 py-4 flex items-center justify-between">
+    <a
+      href="/"
+      class="font-serif text-lg font-bold text-[var(--color-copper)] no-underline hover:text-[var(--color-copper-hover)] transition-colors"
+    >
+      factory floor
+    </a>
+    <ul class="flex gap-6 list-none m-0 p-0">
+      {navLinks.map(({ href, label }) => (
+        <li>
+          <a
+            href={href}
+            class:list={[
+              'text-sm font-sans no-underline transition-colors',
+              current.startsWith(href)
+                ? 'text-[var(--color-copper)]'
+                : 'text-[var(--color-text-muted)] hover:text-[var(--color-text)]',
+            ]}
+          >
+            {label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</nav>

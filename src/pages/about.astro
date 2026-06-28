@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="about" description="What factory floor is and why it exists.">
+  <article class="mx-auto" style="max-width: 68ch;">
+    <h1 class="font-serif text-2xl font-bold text-[var(--color-text)] mb-8 mt-0">About</h1>
+    <div class="prose prose-invert max-w-none
+                prose-p:font-serif prose-p:text-[var(--color-text)] prose-p:leading-relaxed
+                prose-headings:font-sans prose-headings:font-semibold prose-headings:text-[var(--color-text)]
+                prose-a:text-[var(--color-copper)] prose-a:no-underline hover:prose-a:underline">
+      <p>
+        <strong>factory floor</strong> is a build journal for <a href="https://github.com/adrianwedd/factory-floor">factory-floor</a> —
+        a private CLI for 3D printing workflow. The pipeline runs from a <code>project.yaml</code>
+        through parametric CAD, mesh validation, a slicer dry run, and a generated report.
+        Nothing touches the printer without a human reading that report first.
+      </p>
+      <p>
+        This site is the public record of building it: decisions made, things that failed,
+        things that worked, and the reasoning behind the process.
+      </p>
+      <p>
+        Built by <a href="https://adrianwedd.com">Adrian Wedd</a>, Tasmania.
+      </p>
+    </div>
+  </article>
+</Base>

@@ -1,0 +1,44 @@
+---
+import NavBar from '../components/NavBar.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = 'A public build journal for factory-floor — a 3D printing workflow CLI.' } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonicalURL} />
+    <title>{title} — factory floor</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={`${title} — factory floor`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta name="twitter:card" content="summary" />
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <NavBar />
+    <main class="flex-1 mx-auto w-full max-w-4xl px-6 py-12">
+      <slot />
+    </main>
+    <footer class="border-t border-[var(--color-border)] py-8">
+      <div class="mx-auto max-w-4xl px-6 text-center text-xs text-[var(--color-text-faint)] font-mono">
+        <a href="https://adrianwedd.com" class="text-[var(--color-text-muted)] no-underline hover:text-[var(--color-text)] transition-colors">
+          Adrian Wedd
+        </a>
+        {' · '}
+        <a href="https://github.com/adrianwedd/factory-floor" class="text-[var(--color-text-muted)] no-underline hover:text-[var(--color-text)] transition-colors">
+          factory-floor on GitHub
+        </a>
+      </div>
+    </footer>
+  </body>
+</html>

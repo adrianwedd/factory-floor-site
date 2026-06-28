@@ -1,0 +1,16 @@
+---
+title: "Starting out"
+date: 2026-06-28
+dispatch: 1
+type: essay
+description: "Why I'm building a pipeline for 3D printing and writing about it publicly."
+project: tr8s-low-stand
+---
+
+The TR-8S has been sitting on my desk at the wrong angle for months. The fix is simple: an angled stand. But I kept not printing one, because printing required remembering slicer settings I'd tuned once and never written down, and the file I thought I had wasn't the right file, and the dimensions were probably wrong anyway.
+
+So I built a pipeline instead.
+
+The pipeline runs from a `project.yaml` — dimensions, material, printer, process profile — through parametric CAD in build123d, mesh validation, a BambuStudio dry-run slice, and a generated Markdown report. Nothing touches the printer without a human reading that report first.
+
+It sounds like overkill for a desk stand. But the actual problem isn't the stand — it's that I've printed maybe a dozen things and can't reproduce any of them. This is the attempt to fix that, and this site is where I write about building it.

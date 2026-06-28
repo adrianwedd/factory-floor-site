@@ -1,0 +1,79 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+/*
+ * factory.wedd.au — dark-first, workshop aesthetic.
+ * Two-accent grammar: copper = editorial voice, amber = machine voice.
+ * Extends adrianwedd.com palette family.
+ * All text/bg combos target WCAG AA (≥4.5:1).
+ */
+
+@theme {
+  /* Backgrounds */
+  --color-surface:         #131118;
+  --color-surface-alt:     #1c1921;
+  --color-surface-raised:  #2a2530;
+  --color-border:          #2e2a34;
+
+  /* Editorial accent — copper (Adrian's voice) */
+  --color-copper:          #c48b6e;
+  --color-copper-dim:      #8a5e47;
+  --color-copper-hover:    #d49e82;
+
+  /* Machine accent — amber (the pipeline reporting) */
+  --color-amber:           #d4890a;
+  --color-amber-dim:       #9a6208;
+  --color-amber-glow:      #e8a030;
+
+  /* Pipeline status colours */
+  --color-status-active:   #4caf82;
+  --color-status-pending:  #d4890a;
+  --color-status-blocked:  #c0392b;
+  --color-status-complete: #7b9e87;
+
+  /* Typography */
+  --color-text:            #e8e0d5;
+  --color-text-muted:      #9e9690;
+  --color-text-faint:      #4a4540;
+  --color-accent:          #c48b6e;
+  --color-accent-hover:    #d49e82;
+
+  /* Fonts — system stack, no web font load */
+  --font-sans:  system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: Georgia, Cambria, 'Times New Roman', serif;
+  --font-mono:  ui-monospace, 'Cascadia Code', 'JetBrains Mono', 'Fira Code', Menlo, monospace;
+
+  --shadow-card: 0 4px 6px -1px var(--color-shadow), 0 2px 4px -2px var(--color-shadow);
+}
+
+:root {
+  --color-shadow: rgb(0 0 0 / 0.35);
+  color-scheme: dark;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a {
+    color: var(--color-copper);
+    text-decoration-color: var(--color-copper-dim);
+  }
+
+  a:hover {
+    color: var(--color-copper-hover);
+  }
+
+  code:not(pre code) {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    background-color: var(--color-surface-raised);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    color: var(--color-amber-glow);
+  }
+}
