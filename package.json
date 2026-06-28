@@ -7,9 +7,10 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "astro": "6.4.6",
     "@astrojs/mdx": "^6.0.1",
     "@astrojs/preact": "^5.1.4",
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "6.4.6",
     "js-yaml": "^4.1.0",
     "preact": "^10.29.2"
   },

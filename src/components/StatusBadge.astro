@@ -18,7 +18,10 @@ const colorMap: Record<string, string> = {
 };
 
 const cls = colorMap[status] ?? 'bg-[var(--color-surface-raised)] text-[var(--color-text-muted)]';
-const label = status.replace(/_/g, ' ');
+const shortLabels: Record<string, string> = {
+  ready_for_human_print_review: 'awaiting review',
+};
+const label = shortLabels[status] ?? status.replace(/_/g, ' ');
 ---
 
 <span class:list={['inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-mono', cls]}>

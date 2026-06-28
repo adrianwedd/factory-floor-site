@@ -44,6 +44,12 @@
   --font-mono:  ui-monospace, 'Cascadia Code', 'JetBrains Mono', 'Fira Code', Menlo, monospace;
 
   --shadow-card: 0 4px 6px -1px var(--color-shadow), 0 2px 4px -2px var(--color-shadow);
+
+  /* Terminal / deep code block background — darker than surface */
+  --color-surface-terminal: #0d0b10;
+
+  /* Prose layout */
+  --prose-measure: 68ch;
 }
 
 :root {

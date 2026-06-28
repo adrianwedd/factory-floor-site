@@ -25,7 +25,16 @@ jobs:
           node-version: 22
           cache: npm
 
+      - name: Checkout factory-floor repo (project data)
+        uses: actions/checkout@v4
+        with:
+          repository: adrianwedd/factory-floor
+          path: ../3d-printing
+          token: ${{ secrets.PIPELINE_PAT || secrets.GITHUB_TOKEN }}
+
       - run: npm ci
+
+      - run: npx astro check
 
       - run: npm run build
 

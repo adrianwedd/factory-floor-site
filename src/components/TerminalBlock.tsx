@@ -9,7 +9,9 @@ export default function TerminalBlock({ lines, filename }: Props) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(lines.join('\n')).then(() => {
+    if (!navigator.clipboard) return;
+    const text = lines.map(l => l.startsWith('$ ') ? l.slice(2) : l).join('\n');
+    navigator.clipboard.writeText(text).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     });
@@ -42,6 +44,7 @@ export default function TerminalBlock({ lines, filename }: Props) {
           <span>{filename}</span>
           <button
             onClick={handleCopy}
+            aria-label={copied ? 'Copied to clipboard' : 'Copy to clipboard'}
             style={{
               background: 'none',
               border: 'none',
@@ -91,6 +94,7 @@ export default function TerminalBlock({ lines, filename }: Props) {
         >
           <button
             onClick={handleCopy}
+            aria-label={copied ? 'Copied to clipboard' : 'Copy to clipboard'}
             style={{
               background: 'none',
               border: 'none',
