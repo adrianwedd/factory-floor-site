@@ -3,7 +3,7 @@ title: "Starting out"
 date: 2026-06-28
 dispatch: 1
 type: essay
-description: "Why I'm building a pipeline for 3D printing and writing about it publicly."
+description: "Why I built a 3D printing pipeline instead of just printing the thing."
 project: tr8s-low-stand
 ---
 
@@ -11,6 +11,44 @@ The TR-8S has been sitting on my desk at the wrong angle for months. The fix is 
 
 So I built a pipeline instead.
 
-The pipeline runs from a `project.yaml` — dimensions, material, printer, process profile — through parametric CAD in build123d, mesh validation, a BambuStudio dry-run slice, and a generated Markdown report. Nothing touches the printer without a human reading that report first.
+## The actual problem
 
-It sounds like overkill for a desk stand. But the actual problem isn't the stand — it's that I've printed maybe a dozen things and can't reproduce any of them. This is the attempt to fix that, and this site is where I write about building it.
+I've printed maybe a dozen things. I can't reproduce any of them.
+
+Not in the sense that the prints failed — most of them worked fine. But if I needed to reprint one tomorrow, I couldn't tell you: which profile I used, whether I ran supports, what layer height, which version of the STL was actually on the printer. The knowledge lived in my head, briefly, and then it didn't.
+
+This is the normal state of 3D printing for most people. You download something, you drag it into BambuStudio, you tweak until it looks right, you print it. If it works, great. If you need to do it again six months later, you start over.
+
+I don't want that. I want a process I can hand to a future version of myself — or to an agent — and have it reproduce exactly what I had. That requires writing things down. The pipeline is the system for writing things down.
+
+## What the pipeline does
+
+Every project starts with a `project.yaml`: dimensions, material, printer profile, process profile, whether supports are needed. That file is the single source of truth. Everything generated — CAD, STEP export, STL, slicer output, report — derives from it.
+
+The steps are:
+
+1. `factory new` — scaffold a project directory from a template
+2. `factory export` — run the build123d CAD model, export STEP and STL
+3. `factory validate` — run the STL through trimesh: watertight, positive volume, fits the printer bed
+4. `factory slice` — invoke BambuStudio CLI with `--slice 0`, local only, no upload
+5. `factory report` — generate a Markdown report from all the above
+
+Nothing advances to the next step without the previous one passing. Nothing reaches the printer without a human reading the report. That boundary is enforced by the absence of code paths, not by a flag — there is no `--send`, no `--upload`, no `--start` anywhere in the codebase.
+
+## What I found while building it
+
+The slice step was interesting. BambuStudio's CLI writes `result.json` — which contains layer count, wall loops, infill density — to the *process working directory*, not to `--outputdir` where it puts the 3MF and gcode. This is undocumented. I found it by noticing that `result.json` kept appearing at the repo root instead of the project's slice directory.
+
+The fix is one line: `cwd=str(slice_dir)` in the subprocess call. But it's the kind of thing that would have been invisible without the test suite catching the wrong location.
+
+The other thing I found: the TR-8S is 263mm deep. The P2S bed is 256mm. This didn't matter until I wired up a bed-fit check — which compares the STL's bounding box to the printer's envelope — and the project correctly failed validation for the first time.
+
+The stand needs to be redesigned as two pieces, or the depth needs to come down. I don't know which yet. I also still need to measure the underside: foot positions, rubber pad recesses, cable exit locations. A community STL gave me the body dimensions, but not the detail underneath.
+
+## Why write about it publicly
+
+Partly accountability. Partly because the interesting part of any project isn't the result — it's the decisions. Why build123d instead of OpenSCAD. Why the pipeline advances status only when an STL is written. Why the safety boundary is enforced by omission rather than by a flag.
+
+Those decisions are worth writing down too. This is where I'll do that.
+
+The TR-8S stand is still on my desk at the wrong angle. But at least now when I print it, I'll know exactly how I got there.
